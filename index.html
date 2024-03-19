@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Canvas</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="menu">
+        <div class="menu__body">
+          <h3>Segments</h3>
+          <div class="menu__group">
+            <button id="dda-line">DDA</button>
+            <button id="bresenham-line">Bresenham</button>
+            <button id="wu-line">Wu</button>
+          </div>
+          <h3>Second-order curves</h3>
+          <div class="menu__group">
+            <button id="circle">Сircle</button>
+            <button id="ellipse">Ellipse</button>
+            <button id="parabola">Parabola</button>
+            <button id="hyperbola">Hyperbola</button>
+          </div>
+          <h3>Parametric curves</h3>
+          <div class="menu__group">
+            <button id="hermite-curve">Hermite</button>
+            <button id="bezier-curve">Bezier</button>
+            <button id="bspline-curve">B-Spline</button>
+          </div>
+        </div>
+
+        <div class="menu__footer">
+          <button id="clear-canvas">Clear</button>
+        </div>
+      </div>
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <script type="module" src="dist/index.js"></script>
+  </body>
+</html>
