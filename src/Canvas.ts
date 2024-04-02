@@ -1,4 +1,4 @@
-import { Point } from './Builder';
+import { Point } from "./Builder";
 
 export type CanvasOptions = {
   scale?: number;
@@ -13,15 +13,15 @@ export class Canvas {
   private drawingController = new AbortController();
 
   constructor({ scale = 10, gridEnabled = false }: CanvasOptions = {}) {
-    this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D;
+    this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.scale = scale;
     this.gridEnabled = gridEnabled;
 
     this.updateCanvasSize();
     this.gridEnabled && this.drawGrid();
 
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       this.updateCanvasSize();
       this.gridEnabled && this.drawGrid();
     });
@@ -53,7 +53,7 @@ export class Canvas {
   private drawGrid() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.context.strokeStyle = '#ccc';
+    this.context.strokeStyle = "#ccc";
     this.context.lineWidth = 0.5;
 
     for (let y = 0; y < this.canvas.height; y += this.scale) {
@@ -71,14 +71,9 @@ export class Canvas {
     }
   }
 
-  drawPixel(point: Point, color = '#000000') {
+  drawPixel(point: Point, color = "#000000") {
     this.context.fillStyle = color;
-    this.context.fillRect(
-      point.x * this.scale,
-      point.y * this.scale,
-      this.scale,
-      this.scale
-    );
+    this.context.fillRect(point.x * this.scale, point.y * this.scale, this.scale, this.scale);
   }
 
   draw(points: Point[], speed: number = 0) {
@@ -90,9 +85,7 @@ export class Canvas {
         if (controller.signal.aborted) return;
 
         const point = points[i];
-        const color = point.intensity
-          ? `rgba(0, 0, 0, ${point.intensity})`
-          : undefined;
+        const color = point.intensity ? `rgba(0, 0, 0, ${point.intensity})` : undefined;
         this.drawPixel(point, color);
 
         await new Promise((resolve) => setTimeout(resolve, speed));
