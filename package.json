@@ -12,5 +12,8 @@
   "type": "module",
   "dependencies": {
     "tsc-alias": "^1.8.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.3"
   }
 }
