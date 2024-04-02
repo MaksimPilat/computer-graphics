@@ -1,5 +1,5 @@
-import { Canvas, CanvasOptions } from './Canvas';
-import { Builder } from './Builder';
+import { Canvas, CanvasOptions } from "./Canvas";
+import { Builder } from "./Builder";
 
 type AppOptions = CanvasOptions & {};
 
@@ -8,9 +8,11 @@ export class App {
 
   constructor(options: AppOptions) {
     this.canvas = new Canvas({
+      root: options.root,
       scale: options.scale,
       gridEnabled: options.gridEnabled,
     });
+
     this.setupEventListeners();
   }
 
@@ -21,10 +23,7 @@ export class App {
   };
 
   drawBresenhamLine = () => {
-    const bresenhamLine = Builder.buildBresenhamLine(
-      { x: 2, y: 2 },
-      { x: 12, y: 6 }
-    );
+    const bresenhamLine = Builder.buildBresenhamLine({ x: 2, y: 2 }, { x: 12, y: 6 });
     this.canvas.clear();
     this.canvas.draw(bresenhamLine, 100);
   };
@@ -55,37 +54,19 @@ export class App {
 
   drawHyperbola = () => {
     const { width, height } = this.canvas.getCanvasSize();
-    const hyperbola = Builder.buildHyperbola(
-      { x: 40, y: 40 },
-      5,
-      5,
-      width,
-      height
-    );
+    const hyperbola = Builder.buildHyperbola({ x: 40, y: 40 }, 5, 5, width, height);
     this.canvas.clear();
     this.canvas.draw(hyperbola, 10);
   };
 
   drawHermiteCurve = () => {
-    const curve = Builder.buildHermiteCurve(
-      { x: 30, y: 10 },
-      { x: 35, y: 25 },
-      { x: 52, y: 10 },
-      { x: 85, y: 5 },
-      100
-    );
+    const curve = Builder.buildHermiteCurve({ x: 30, y: 10 }, { x: 35, y: 25 }, { x: 52, y: 10 }, { x: 85, y: 5 }, 100);
     this.canvas.clear();
     this.canvas.draw(curve, 10);
   };
 
   drawBezierCurve = () => {
-    const curve = Builder.buildBezierCurve(
-      { x: 30, y: 10 },
-      { x: 35, y: 25 },
-      { x: 42, y: 10 },
-      { x: 32, y: 35 },
-      100
-    );
+    const curve = Builder.buildBezierCurve({ x: 30, y: 10 }, { x: 35, y: 25 }, { x: 42, y: 10 }, { x: 32, y: 35 }, 100);
     this.canvas.clear();
     this.canvas.draw(curve, 10);
   };
@@ -100,11 +81,7 @@ export class App {
     const degree = 2;
     const numPoints = 100;
 
-    const bsplineCurve = Builder.buildBSplineCurve(
-      controlPoints,
-      degree,
-      numPoints
-    );
+    const bsplineCurve = Builder.buildBSplineCurve(controlPoints, degree, numPoints);
 
     this.canvas.clear();
     this.canvas.draw(bsplineCurve, 10);
@@ -115,38 +92,16 @@ export class App {
   };
 
   setupEventListeners = () => {
-    document
-      .getElementById('dda-line')
-      ?.addEventListener('click', this.drawDDALine);
-    document
-      .getElementById('bresenham-line')
-      ?.addEventListener('click', this.drawBresenhamLine);
-    document
-      .getElementById('wu-line')
-      ?.addEventListener('click', this.drawWuLine);
-    document
-      .getElementById('circle')
-      ?.addEventListener('click', this.drawCircle);
-    document
-      .getElementById('ellipse')
-      ?.addEventListener('click', this.drawEllipse);
-    document
-      .getElementById('clear-canvas')
-      ?.addEventListener('click', this.clearCanvas);
-    document
-      .getElementById('parabola')
-      ?.addEventListener('click', this.drawParabola);
-    document
-      .getElementById('hyperbola')
-      ?.addEventListener('click', this.drawHyperbola);
-    document
-      .getElementById('hermite-curve')
-      ?.addEventListener('click', this.drawHermiteCurve);
-    document
-      .getElementById('bezier-curve')
-      ?.addEventListener('click', this.drawBezierCurve);
-    document
-      .getElementById('bspline-curve')
-      ?.addEventListener('click', this.drawBSplineCurve);
+    document.getElementById("dda-line")?.addEventListener("click", this.drawDDALine);
+    document.getElementById("bresenham-line")?.addEventListener("click", this.drawBresenhamLine);
+    document.getElementById("wu-line")?.addEventListener("click", this.drawWuLine);
+    document.getElementById("circle")?.addEventListener("click", this.drawCircle);
+    document.getElementById("ellipse")?.addEventListener("click", this.drawEllipse);
+    document.getElementById("clear-canvas")?.addEventListener("click", this.clearCanvas);
+    document.getElementById("parabola")?.addEventListener("click", this.drawParabola);
+    document.getElementById("hyperbola")?.addEventListener("click", this.drawHyperbola);
+    document.getElementById("hermite-curve")?.addEventListener("click", this.drawHermiteCurve);
+    document.getElementById("bezier-curve")?.addEventListener("click", this.drawBezierCurve);
+    document.getElementById("bspline-curve")?.addEventListener("click", this.drawBSplineCurve);
   };
 }

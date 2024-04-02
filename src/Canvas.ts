@@ -1,6 +1,7 @@
 import { Point } from "./Builder";
 
 export type CanvasOptions = {
+  root?: HTMLElement;
   scale?: number;
   gridEnabled?: boolean;
 };
@@ -8,23 +9,30 @@ export type CanvasOptions = {
 export class Canvas {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
+  private resizeObserver: ResizeObserver;
   private scale: number;
   private gridEnabled: boolean;
   private drawingController = new AbortController();
 
-  constructor({ scale = 10, gridEnabled = false }: CanvasOptions = {}) {
-    this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
+  constructor({ root = document.body, scale = 10, gridEnabled = false }: CanvasOptions = {}) {
+    this.canvas = document.createElement("canvas");
     this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.scale = scale;
     this.gridEnabled = gridEnabled;
 
-    this.updateCanvasSize();
     this.gridEnabled && this.drawGrid();
 
-    window.addEventListener("resize", () => {
-      this.updateCanvasSize();
+    this.resizeObserver = new ResizeObserver((entries) => {
+      const { target } = entries[0];
+      const { width, height } = target.getBoundingClientRect();
+      this.canvas.width = width;
+      this.canvas.height = height;
       this.gridEnabled && this.drawGrid();
     });
+
+    this.resizeObserver.observe(root);
+
+    root.appendChild(this.canvas);
   }
 
   setScale(value: number) {
@@ -43,11 +51,6 @@ export class Canvas {
 
   getCanvasSize() {
     return { width: this.canvas.width, height: this.canvas.height };
-  }
-
-  private updateCanvasSize() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
   }
 
   private drawGrid() {
