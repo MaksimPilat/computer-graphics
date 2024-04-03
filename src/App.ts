@@ -16,7 +16,7 @@ export class App {
     });
 
     this.canvas3D = new Canvas3D({
-      root: document.getElementById('content') as HTMLElement,
+      root: options.root,
     });
 
     this.canvas3D.disable();
