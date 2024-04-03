@@ -161,6 +161,64 @@ export class Canvas3D {
     animatePyramid();
   }
 
+  drawDodecahedron() {
+    this.clear();
+
+    const geometry = new THREE.DodecahedronGeometry(1, 0);
+    const edges = new THREE.EdgesGeometry(geometry);
+    const material = new THREE.LineBasicMaterial({ color: 0x000000 });
+    const line = new THREE.LineSegments(edges, material);
+    line.name = 'polyhedron';
+
+    this.scene.add(line);
+
+    this.camera.position.z = 3;
+
+    const animateDodecahedron = () => {
+      this.animationFrameId = requestAnimationFrame(() =>
+        animateDodecahedron()
+      );
+
+      const line = this.scene.getObjectByName(
+        'polyhedron'
+      ) as THREE.Object3D<THREE.Object3DEventMap>;
+
+      if (!this.isDragging) {
+        const deltaMove = {
+          x: 0.5,
+          y: 0.3,
+          z: 0.5,
+        };
+
+        const axis = new THREE.Vector3(deltaMove.y, deltaMove.x, deltaMove.z);
+        const angle = axis.length() * 0.01;
+
+        line.rotateOnAxis(axis.normalize(), angle);
+      } else {
+        const deltaMove = {
+          x: this.mousePosition.previous.x - this.mousePosition.current.x,
+          y: this.mousePosition.previous.y - this.mousePosition.current.y,
+        };
+
+        if (deltaMove.x || deltaMove.y) {
+          const axis = new THREE.Vector3(deltaMove.y, deltaMove.x, 0);
+          const angle = axis.length() * 0.01;
+
+          line.rotateOnWorldAxis(axis.normalize(), angle);
+        }
+
+        this.mousePosition.previous = {
+          x: this.mousePosition.current.x,
+          y: this.mousePosition.current.y,
+        };
+      }
+
+      this.renderer.render(this.scene, this.camera);
+    };
+
+    animateDodecahedron();
+  }
+
   clear() {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);

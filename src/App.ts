@@ -169,6 +169,11 @@ export class App {
     this.canvas3D.drawPyramid();
   }
 
+  drawDodecahedron() {
+    this.switchTo3D();
+    this.canvas3D.drawDodecahedron();
+  }
+
   clearCanvas() {
     this.canvas2D.clear();
     this.canvas3D.clear();
@@ -214,5 +219,8 @@ export class App {
     document
       .getElementById('pyramid')
       ?.addEventListener('click', () => this.drawPyramid());
+    document
+      .getElementById('dodecahedron')
+      ?.addEventListener('click', () => this.drawDodecahedron());
   }
 }
