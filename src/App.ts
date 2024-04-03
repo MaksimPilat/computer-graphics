@@ -5,8 +5,8 @@ import { Builder } from './Builder';
 type AppOptions = Canvas2DOptions & Canvas3DOptions & {};
 
 export class App {
-  canvas2D: Canvas2D;
-  canvas3D: Canvas3D;
+  private canvas2D: Canvas2D;
+  private canvas3D: Canvas3D;
 
   constructor(options: AppOptions) {
     this.canvas2D = new Canvas2D({
@@ -164,6 +164,11 @@ export class App {
     this.canvas3D.drawCube();
   }
 
+  drawPyramid() {
+    this.switchTo3D();
+    this.canvas3D.drawPyramid();
+  }
+
   clearCanvas() {
     this.canvas2D.clear();
     this.canvas3D.clear();
@@ -206,5 +211,8 @@ export class App {
     document
       .getElementById('cube')
       ?.addEventListener('click', () => this.drawCube());
+    document
+      .getElementById('pyramid')
+      ?.addEventListener('click', () => this.drawPyramid());
   }
 }

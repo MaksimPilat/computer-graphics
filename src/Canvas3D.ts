@@ -105,6 +105,62 @@ export class Canvas3D {
     animateCube();
   }
 
+  drawPyramid() {
+    this.clear();
+
+    const geometry = new THREE.ConeGeometry(1, 1, 4);
+    const edges = new THREE.EdgesGeometry(geometry);
+    const material = new THREE.LineBasicMaterial({ color: 0x000000 });
+    const line = new THREE.LineSegments(edges, material);
+    line.name = 'pyramid';
+
+    this.scene.add(line);
+
+    this.camera.position.z = 3;
+
+    const animatePyramid = () => {
+      this.animationFrameId = requestAnimationFrame(() => animatePyramid());
+
+      const line = this.scene.getObjectByName(
+        'pyramid'
+      ) as THREE.Object3D<THREE.Object3DEventMap>;
+
+      if (!this.isDragging) {
+        const deltaMove = {
+          x: 0.5,
+          y: 0.3,
+          z: 0.4,
+        };
+
+        const axis = new THREE.Vector3(deltaMove.y, deltaMove.x, deltaMove.z);
+        const angle = axis.length() * 0.01;
+
+        line.rotateOnAxis(axis.normalize(), angle);
+      } else {
+        const deltaMove = {
+          x: this.mousePosition.previous.x - this.mousePosition.current.x,
+          y: this.mousePosition.previous.y - this.mousePosition.current.y,
+        };
+
+        if (deltaMove.x || deltaMove.y) {
+          const axis = new THREE.Vector3(deltaMove.y, deltaMove.x, 0);
+          const angle = axis.length() * 0.01;
+
+          line.rotateOnWorldAxis(axis.normalize(), angle);
+        }
+
+        this.mousePosition.previous = {
+          x: this.mousePosition.current.x,
+          y: this.mousePosition.current.y,
+        };
+      }
+
+      this.renderer.render(this.scene, this.camera);
+    };
+
+    animatePyramid();
+  }
+
   clear() {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
