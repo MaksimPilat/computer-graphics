@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: #292929;
+  color: #1c1c1c;
 }
 
 body,
@@ -33,6 +33,7 @@ hr {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  z-index: 2;
 }
 
 .menu__body {

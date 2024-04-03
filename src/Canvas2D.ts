@@ -1,12 +1,12 @@
-import { Point } from "./Builder";
+import { Point } from './Builder';
 
-export type CanvasOptions = {
-  root?: HTMLElement;
+export type Canvas2DOptions = {
+  root: HTMLElement;
   scale?: number;
   gridEnabled?: boolean;
 };
 
-export class Canvas {
+export class Canvas2D {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private resizeObserver: ResizeObserver;
@@ -14,9 +14,9 @@ export class Canvas {
   private gridEnabled: boolean;
   private drawingController = new AbortController();
 
-  constructor({ root = document.body, scale = 10, gridEnabled = false }: CanvasOptions = {}) {
-    this.canvas = document.createElement("canvas");
-    this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+  constructor({ root, scale = 10, gridEnabled = false }: Canvas2DOptions) {
+    this.canvas = document.createElement('canvas');
+    this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D;
     this.scale = scale;
     this.gridEnabled = gridEnabled;
 
@@ -25,8 +25,8 @@ export class Canvas {
     this.resizeObserver = new ResizeObserver((entries) => {
       const { target } = entries[0];
       const { width, height } = target.getBoundingClientRect();
-      this.canvas.width = width;
-      this.canvas.height = height;
+      this.canvas.width = Math.floor(width);
+      this.canvas.height = Math.floor(height);
       this.gridEnabled && this.drawGrid();
     });
 
@@ -56,7 +56,7 @@ export class Canvas {
   private drawGrid() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.context.strokeStyle = "#ccc";
+    this.context.strokeStyle = '#ccc';
     this.context.lineWidth = 0.5;
 
     for (let y = 0; y < this.canvas.height; y += this.scale) {
@@ -74,9 +74,14 @@ export class Canvas {
     }
   }
 
-  drawPixel(point: Point, color = "#000000") {
+  private drawPixel(point: Point, color = '#000000') {
     this.context.fillStyle = color;
-    this.context.fillRect(point.x * this.scale, point.y * this.scale, this.scale, this.scale);
+    this.context.fillRect(
+      point.x * this.scale,
+      point.y * this.scale,
+      this.scale,
+      this.scale
+    );
   }
 
   draw(points: Point[], speed: number = 0) {
@@ -88,7 +93,9 @@ export class Canvas {
         if (controller.signal.aborted) return;
 
         const point = points[i];
-        const color = point.intensity ? `rgba(0, 0, 0, ${point.intensity})` : undefined;
+        const color = point.intensity
+          ? `rgba(0, 0, 0, ${point.intensity})`
+          : undefined;
         this.drawPixel(point, color);
 
         await new Promise((resolve) => setTimeout(resolve, speed));
@@ -100,5 +107,13 @@ export class Canvas {
     this.drawingController.abort();
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.gridEnabled && this.drawGrid();
+  }
+
+  disable() {
+    this.canvas.style.display = 'none';
+  }
+
+  enable() {
+    this.canvas.style.display = 'block';
   }
 }
