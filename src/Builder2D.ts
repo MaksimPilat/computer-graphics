@@ -1,6 +1,6 @@
 import { Point } from './types';
 
-export class Builder {
+export class Builder2D {
   static buildDDALine(start: Point, end: Point) {
     const points: Point[] = [];
 

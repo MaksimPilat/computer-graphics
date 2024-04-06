@@ -1,6 +1,6 @@
 import { Canvas2D, Canvas2DOptions } from './Canvas2D';
 import { Canvas3D, Canvas3DOptions } from './Canvas3D';
-import { Builder } from './Builder';
+import { Builder2D } from './Builder2D';
 
 type AppOptions = Canvas2DOptions & Canvas3DOptions & {};
 
@@ -37,7 +37,7 @@ export class App {
   drawDDALine() {
     this.switchTo2D();
 
-    const DDALine = Builder.buildDDALine({ x: 2, y: 2 }, { x: 10, y: 14 });
+    const DDALine = Builder2D.buildDDALine({ x: 2, y: 2 }, { x: 10, y: 14 });
 
     this.canvas2D.clear();
     this.canvas2D.draw(DDALine, 100);
@@ -46,7 +46,7 @@ export class App {
   drawBresenhamLine() {
     this.switchTo2D();
 
-    const bresenhamLine = Builder.buildBresenhamLine(
+    const bresenhamLine = Builder2D.buildBresenhamLine(
       { x: 2, y: 2 },
       { x: 12, y: 6 }
     );
@@ -58,7 +58,7 @@ export class App {
   drawWuLine() {
     this.switchTo2D();
 
-    const wuLine = Builder.buildWuLine({ x: 2, y: 2 }, { x: 24, y: 12 });
+    const wuLine = Builder2D.buildWuLine({ x: 2, y: 2 }, { x: 24, y: 12 });
 
     this.canvas2D.clear();
     this.canvas2D.draw(wuLine, 50);
@@ -67,7 +67,7 @@ export class App {
   drawCircle() {
     this.switchTo2D();
 
-    const circle = Builder.buildCircle({ x: 18, y: 18 }, 12);
+    const circle = Builder2D.buildCircle({ x: 18, y: 18 }, 12);
 
     this.canvas2D.clear();
     this.canvas2D.draw(circle, 20);
@@ -76,7 +76,7 @@ export class App {
   drawEllipse() {
     this.switchTo2D();
 
-    const ellipse = Builder.buildEllipse({ x: 18, y: 18 }, 8, 12);
+    const ellipse = Builder2D.buildEllipse({ x: 18, y: 18 }, 8, 12);
 
     this.canvas2D.clear();
     this.canvas2D.draw(ellipse, 20);
@@ -85,7 +85,7 @@ export class App {
   drawParabola() {
     this.switchTo2D();
 
-    const parabola = Builder.buildParabola({ x: 20, y: 30 }, 2, 5);
+    const parabola = Builder2D.buildParabola({ x: 20, y: 30 }, 2, 5);
 
     this.canvas2D.clear();
     this.canvas2D.draw(parabola, 10);
@@ -95,7 +95,7 @@ export class App {
     this.switchTo2D();
 
     const { width, height } = this.canvas2D.getCanvasSize();
-    const hyperbola = Builder.buildHyperbola(
+    const hyperbola = Builder2D.buildHyperbola(
       { x: 40, y: 40 },
       5,
       5,
@@ -110,7 +110,7 @@ export class App {
   drawHermiteCurve() {
     this.switchTo2D();
 
-    const curve = Builder.buildHermiteCurve(
+    const curve = Builder2D.buildHermiteCurve(
       { x: 30, y: 10 },
       { x: 35, y: 25 },
       { x: 52, y: 10 },
@@ -125,7 +125,7 @@ export class App {
   drawBezierCurve() {
     this.switchTo2D();
 
-    const curve = Builder.buildBezierCurve(
+    const curve = Builder2D.buildBezierCurve(
       { x: 30, y: 10 },
       { x: 35, y: 25 },
       { x: 42, y: 10 },
@@ -149,7 +149,7 @@ export class App {
     const degree = 2;
     const numPoints = 100;
 
-    const bsplineCurve = Builder.buildBSplineCurve(
+    const bsplineCurve = Builder2D.buildBSplineCurve(
       controlPoints,
       degree,
       numPoints
