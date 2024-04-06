@@ -1,12 +1,11 @@
-import { Point } from './Builder';
+import { Canvas, CanvasOptions, Point } from './types';
 
-export type Canvas2DOptions = {
-  root: HTMLElement;
+export type Canvas2DOptions = CanvasOptions & {
   scale?: number;
   gridEnabled?: boolean;
 };
 
-export class Canvas2D {
+export class Canvas2D implements Canvas {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private resizeObserver: ResizeObserver;

@@ -1,8 +1,4 @@
-export type Point = {
-  x: number;
-  y: number;
-  intensity?: number;
-};
+import { Point } from './types';
 
 export class Builder {
   static buildDDALine(start: Point, end: Point) {
