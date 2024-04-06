@@ -2,7 +2,7 @@ import { Canvas2D, Canvas2DOptions } from './Canvas2D';
 import { Canvas3D, Canvas3DOptions } from './Canvas3D';
 import { Builder2D } from './Builder2D';
 
-type AppOptions = Canvas2DOptions & Canvas3DOptions & {};
+type AppOptions = Canvas2DOptions & Canvas3DOptions;
 
 export class App {
   private canvas2D: Canvas2D;
