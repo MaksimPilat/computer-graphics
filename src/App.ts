@@ -1,6 +1,7 @@
 import { Canvas2D, Canvas2DOptions } from './Canvas2D';
 import { Canvas3D, Canvas3DOptions } from './Canvas3D';
 import { Builder2D } from './Builder2D';
+import { Point } from './types';
 
 type AppOptions = Canvas2DOptions & Canvas3DOptions;
 
@@ -140,23 +141,55 @@ export class App {
   drawBSplineCurve() {
     this.switchTo2D();
 
-    const controlPoints = [
+    const controlPoints: Point[] = [
       { x: 20, y: 25 },
       { x: 30, y: 15 },
       { x: 35, y: 40 },
       { x: 60, y: 20 },
     ];
-    const degree = 2;
-    const numPoints = 100;
 
-    const bsplineCurve = Builder2D.buildBSplineCurve(
-      controlPoints,
-      degree,
-      numPoints
-    );
+    const bsplineCurve = Builder2D.buildBSplineCurve(controlPoints, 2, 100);
 
     this.canvas2D.clear();
     this.canvas2D.draw(bsplineCurve, 10);
+  }
+
+  drawGrahamHull() {
+    this.switchTo2D();
+
+    const points: Point[] = [
+      { x: 0, y: 3 },
+      { x: 2, y: 2 },
+      { x: 1, y: 1 },
+      { x: 2, y: 1 },
+      { x: 3, y: 0 },
+      { x: 0, y: 0 },
+      { x: 12, y: 10 },
+    ];
+
+    const hull = Builder2D.buildGrahamHull(points);
+
+    this.canvas2D.clear();
+    this.canvas2D.draw(hull, 50);
+  }
+
+  drawJarvisHull() {
+    this.switchTo2D();
+
+    const points: Point[] = [
+      { x: 0, y: 3 },
+      { x: 2, y: 2 },
+      { x: 1, y: 1 },
+      { x: 2, y: 1 },
+      { x: 3, y: 0 },
+      { x: 0, y: 0 },
+      { x: 12, y: 10 },
+    ];
+
+    const hull = Builder2D.buildJarvisHull(points);
+
+    this.canvas2D.clear();
+    this.canvas2D.draw(hull, 50);
   }
 
   drawCube() {
@@ -222,5 +255,11 @@ export class App {
     document
       .getElementById('dodecahedron')
       ?.addEventListener('click', () => this.drawDodecahedron());
+    document
+      .getElementById('graham-hull')
+      ?.addEventListener('click', () => this.drawGrahamHull());
+    document
+      .getElementById('jarvis-hull')
+      ?.addEventListener('click', () => this.drawJarvisHull());
   }
 }

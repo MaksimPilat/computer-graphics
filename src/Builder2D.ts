@@ -4,6 +4,9 @@ export class Builder2D {
   static buildDDALine(start: Point, end: Point) {
     const points: Point[] = [];
 
+    let currentX = start.x;
+    let currentY = start.y;
+
     const dx = end.x - start.x;
     const dy = end.y - start.y;
 
@@ -13,9 +16,9 @@ export class Builder2D {
     const yIncrement = dy / steps;
 
     for (let i = 0; i <= steps; i++) {
-      points.push({ x: Math.round(start.x), y: Math.round(start.y) });
-      start.x += xIncrement;
-      start.y += yIncrement;
+      points.push({ x: Math.round(currentX), y: Math.round(currentY) });
+      currentX += xIncrement;
+      currentY += yIncrement;
     }
 
     return points;
@@ -356,6 +359,63 @@ export class Builder2D {
       const result = calculateBSplinePoint(t, degree, controlPoints, knots);
       points.push(result);
     }
+
+    return points;
+  }
+
+  static buildGrahamHull(points: Point[]) {
+    const findLeftmostPoint = (points: Point[]) => {
+      let leftmost = points[0];
+      for (const point of points) {
+        if (point.x < leftmost.x) {
+          leftmost = point;
+        }
+      }
+      return leftmost;
+    };
+
+    const orientation = (p: Point, q: Point, r: Point) => {
+      const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+      if (val === 0) return 0;
+      return val > 0 ? 1 : 2;
+    };
+
+    if (points.length < 3) return points;
+
+    const keyPoints: Point[] = [];
+
+    let leftmost = findLeftmostPoint(points);
+    let current = leftmost;
+
+    do {
+      keyPoints.push(current);
+      let next = points[0];
+
+      for (const point of points) {
+        if (next === current || orientation(current, point, next) === 2) {
+          next = point;
+        }
+      }
+
+      current = next;
+    } while (current !== leftmost);
+
+    const hull: Point[] = [];
+    for (let i = 0; i < keyPoints.length - 1; i++) {
+      const line = Builder2D.buildDDALine(keyPoints[i], keyPoints[i + 1]);
+      hull.push(...line.slice(0, -1));
+    }
+    const line = Builder2D.buildDDALine(
+      keyPoints[keyPoints.length - 1],
+      keyPoints[0]
+    );
+    hull.push(...line.slice(0, -1));
+
+    return hull;
+  }
+
+  static buildJarvisHull(points: Point[]) {
+    console.log('JarvisHull');
 
     return points;
   }
