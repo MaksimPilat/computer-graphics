@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Canvas, CanvasOptions, Point, Shapes } from './types';
+import { Canvas, CanvasOptions, Point, Shape } from './types';
 
 export type Canvas3DOptions = CanvasOptions;
 
@@ -19,7 +19,7 @@ export class Canvas3D implements Canvas {
     previous: { x: 0, y: 0 },
     current: { x: 0, y: 0 },
   };
-  private currentShape: Shapes | null = null;
+  private currentShape: Shape | null = null;
 
   constructor({ root }: Canvas3DOptions) {
     this.resizeObserver = new ResizeObserver((entries) => {
@@ -49,7 +49,7 @@ export class Canvas3D implements Canvas {
     );
   }
 
-  draw(geometry: THREE.BufferGeometry, shapeName: Shapes) {
+  draw(geometry: THREE.BufferGeometry, shapeName: Shape) {
     this.clear();
 
     this.currentShape = shapeName;
@@ -66,17 +66,17 @@ export class Canvas3D implements Canvas {
 
   drawCube() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    this.draw(geometry, Shapes.Cube);
+    this.draw(geometry, Shape.CUBE);
   }
 
   drawPyramid() {
     const geometry = new THREE.ConeGeometry(1, 1, 4);
-    this.draw(geometry, Shapes.Pyramid);
+    this.draw(geometry, Shape.PYRAMID);
   }
 
   drawDodecahedron() {
     const geometry = new THREE.DodecahedronGeometry(1, 0);
-    this.draw(geometry, Shapes.Dodecahedron);
+    this.draw(geometry, Shape.DODECAHEDRON);
   }
 
   clear() {
@@ -131,7 +131,7 @@ export class Canvas3D implements Canvas {
     }
   }
 
-  private rotateShape(shapeName: Shapes, deltaMove: Point) {
+  private rotateShape(shapeName: Shape, deltaMove: Point) {
     const object = this.scene.getObjectByName(
       shapeName.toString()
     ) as THREE.Object3D<THREE.Object3DEventMap>;

@@ -16,8 +16,14 @@ export interface Canvas {
   clear: () => void;
 }
 
-export enum Shapes {
-  Cube,
-  Pyramid,
-  Dodecahedron,
+export enum Shape {
+  CUBE,
+  PYRAMID,
+  DODECAHEDRON,
+}
+
+export enum Orientation {
+  COLLINEAR = 0,
+  CLOCKWISE = 1,
+  COUNTER_CLOCKWISE = 2,
 }

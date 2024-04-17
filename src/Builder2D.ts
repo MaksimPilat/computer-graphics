@@ -1,4 +1,4 @@
-import { Point } from './types';
+import { Orientation, Point } from './types';
 
 export class Builder2D {
   static buildDDALine(start: Point, end: Point) {
@@ -377,8 +377,8 @@ export class Builder2D {
 
   private static orientation(p: Point, q: Point, r: Point) {
     const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-    if (val === 0) return 0;
-    return val > 0 ? 1 : 2;
+    if (val === 0) return Orientation.COLLINEAR;
+    return val > 0 ? Orientation.CLOCKWISE : Orientation.COUNTER_CLOCKWISE;
   }
 
   private static findLeftmost(points: Point[]) {
@@ -422,8 +422,7 @@ export class Builder2D {
   }
 
   static buildJarvisHull(points: Point[]) {
-    const n = points.length;
-    if (n < 3) return [];
+    if (points.length < 3) return [];
 
     let leftmost = this.findLeftmost(points);
 
@@ -435,9 +434,9 @@ export class Builder2D {
     let q;
 
     do {
-      q = (p + 1) % n;
+      q = (p + 1) % points.length;
 
-      for (let i = 0; i < n; i++) {
+      for (let i = 0; i < points.length; i++) {
         if (this.orientation(points[p], points[i], points[q]) === 2) {
           q = i;
         }
