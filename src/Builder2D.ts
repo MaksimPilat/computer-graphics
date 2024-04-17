@@ -363,28 +363,42 @@ export class Builder2D {
     return points;
   }
 
-  static buildGrahamHull(points: Point[]) {
-    const findLeftmostPoint = (points: Point[]) => {
-      let leftmost = points[0];
-      for (const point of points) {
-        if (point.x < leftmost.x) {
-          leftmost = point;
-        }
+  static buildChain(point: Point[]) {
+    const chain: Point[] = [];
+
+    for (let i = 0; i < point.length - 1; i++) {
+      const line = Builder2D.buildDDALine(point[i], point[i + 1]);
+      line.pop();
+      chain.push(...line);
+    }
+
+    return chain;
+  }
+
+  private static orientation(p: Point, q: Point, r: Point) {
+    const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+    if (val === 0) return 0;
+    return val > 0 ? 1 : 2;
+  }
+
+  private static findLeftmost(points: Point[]) {
+    let leftmost = points[0];
+
+    for (const point of points) {
+      if (point.x < leftmost.x) {
+        leftmost = point;
       }
-      return leftmost;
-    };
+    }
 
-    const orientation = (p: Point, q: Point, r: Point) => {
-      const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-      if (val === 0) return 0;
-      return val > 0 ? 1 : 2;
-    };
+    return leftmost;
+  }
 
+  static buildGrahamHull(points: Point[]) {
     if (points.length < 3) return points;
 
     const keyPoints: Point[] = [];
 
-    let leftmost = findLeftmostPoint(points);
+    let leftmost = this.findLeftmost(points);
     let current = leftmost;
 
     do {
@@ -392,7 +406,7 @@ export class Builder2D {
       let next = points[0];
 
       for (const point of points) {
-        if (next === current || orientation(current, point, next) === 2) {
+        if (next === current || this.orientation(current, point, next) === 2) {
           next = point;
         }
       }
@@ -400,23 +414,44 @@ export class Builder2D {
       current = next;
     } while (current !== leftmost);
 
-    const hull: Point[] = [];
-    for (let i = 0; i < keyPoints.length - 1; i++) {
-      const line = Builder2D.buildDDALine(keyPoints[i], keyPoints[i + 1]);
-      hull.push(...line.slice(0, -1));
-    }
-    const line = Builder2D.buildDDALine(
-      keyPoints[keyPoints.length - 1],
-      keyPoints[0]
-    );
-    hull.push(...line.slice(0, -1));
+    keyPoints.push(keyPoints[0]);
+
+    const hull = this.buildChain(keyPoints);
 
     return hull;
   }
 
   static buildJarvisHull(points: Point[]) {
-    console.log('JarvisHull');
+    const n = points.length;
+    if (n < 3) return [];
 
-    return points;
+    let leftmost = this.findLeftmost(points);
+
+    let p = points.indexOf(leftmost);
+    const keyPoints: Point[] = [];
+
+    keyPoints.push(leftmost);
+
+    let q;
+
+    do {
+      q = (p + 1) % n;
+
+      for (let i = 0; i < n; i++) {
+        if (this.orientation(points[p], points[i], points[q]) === 2) {
+          q = i;
+        }
+      }
+
+      p = q;
+
+      keyPoints.push(points[p]);
+    } while (p !== points.indexOf(leftmost));
+
+    keyPoints[keyPoints.length - 1] = keyPoints[0];
+
+    const hull = this.buildChain(keyPoints);
+
+    return hull;
   }
 }
