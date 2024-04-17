@@ -406,7 +406,11 @@ export class Builder2D {
       let next = points[0];
 
       for (const point of points) {
-        if (next === current || this.orientation(current, point, next) === 2) {
+        if (
+          next === current ||
+          this.orientation(current, point, next) ===
+            Orientation.COUNTER_CLOCKWISE
+        ) {
           next = point;
         }
       }
@@ -437,7 +441,10 @@ export class Builder2D {
       q = (p + 1) % points.length;
 
       for (let i = 0; i < points.length; i++) {
-        if (this.orientation(points[p], points[i], points[q]) === 2) {
+        if (
+          this.orientation(points[p], points[i], points[q]) ===
+          Orientation.COUNTER_CLOCKWISE
+        ) {
           q = i;
         }
       }
