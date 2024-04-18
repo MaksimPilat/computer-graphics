@@ -1,4 +1,4 @@
-import { Canvas, CanvasOptions, Point } from './types';
+import { Canvas, CanvasOptions, Point } from '../types';
 
 export type Canvas2DOptions = CanvasOptions & {
   scale?: number;

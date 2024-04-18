@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Canvas, CanvasOptions, Point, Shape } from './types';
+import { Canvas, CanvasOptions, Point, Shape } from '../types';
 
 export type Canvas3DOptions = CanvasOptions;
 
