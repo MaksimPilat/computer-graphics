@@ -3,7 +3,7 @@ import { Orientation, Point } from '../types';
 import { findLeftmost, orientation } from './helpers';
 
 export class PolygonBuilder {
-  static buildGrahamHull(points: Point[]) {
+  static buildGrahamPolygon(points: Point[]) {
     if (points.length < 3) return points;
 
     const keyPoints: Point[] = [];
@@ -29,12 +29,12 @@ export class PolygonBuilder {
 
     keyPoints.push(keyPoints[0]);
 
-    const hull = LineBuilder.buildChain(keyPoints);
+    const polygon = LineBuilder.buildChain(keyPoints);
 
-    return hull;
+    return polygon;
   }
 
-  static buildJarvisHull(points: Point[]) {
+  static buildJarvisPolygon(points: Point[]) {
     if (points.length < 3) return [];
 
     let leftmost = findLeftmost(points);
@@ -65,32 +65,32 @@ export class PolygonBuilder {
 
     keyPoints[keyPoints.length - 1] = keyPoints[0];
 
-    const hull = LineBuilder.buildChain(keyPoints);
+    const polygon = LineBuilder.buildChain(keyPoints);
 
-    return hull;
+    return polygon;
   }
 
-  static scanLinesFill(point: Point[]) {
-    console.log('scanLinesFill');
+  static scanLinesFill(polygon: Point[]) {
+    console.log('sscanLinesFill');
 
-    return point;
+    return polygon;
   }
 
-  static scanLinesAndActiveEdgesFill(point: Point[]) {
+  static scanLinesWithActiveEdgesFill(polygon: Point[]) {
     console.log('scanLinesAndActiveEdgesFill');
 
-    return point;
+    return polygon;
   }
 
-  static floodFill(point: Point[]) {
+  static floodFill(polygon: Point[]) {
     console.log('floodFill');
 
-    return point;
+    return polygon;
   }
 
-  static scanLinesFloodFill(point: Point[]) {
+  static scanLinesFloodFill(polygon: Point[]) {
     console.log('scanLinesFloodFill');
 
-    return point;
+    return polygon;
   }
 }

@@ -156,7 +156,7 @@ export class App {
     this.canvas2D.draw(bsplineCurve, 10);
   }
 
-  drawGrahamHull() {
+  drawGrahamPolygon() {
     this.switchTo2D();
 
     const points: Point[] = [
@@ -169,14 +169,14 @@ export class App {
       { x: 12, y: 10 },
     ];
 
-    let hull = PolygonBuilder.buildGrahamHull(points);
-    hull = this.fillHull(hull);
+    let polygon = PolygonBuilder.buildGrahamPolygon(points);
+    polygon = this.fillPolygon(polygon);
 
     this.canvas2D.clear();
-    this.canvas2D.draw(hull, 50);
+    this.canvas2D.draw(polygon, 50);
   }
 
-  drawJarvisHull() {
+  drawJarvisPolygon() {
     this.switchTo2D();
 
     const points: Point[] = [
@@ -189,30 +189,30 @@ export class App {
       { x: 12, y: 10 },
     ];
 
-    let hull = PolygonBuilder.buildJarvisHull(points);
-    hull = this.fillHull(hull);
+    let hull = PolygonBuilder.buildJarvisPolygon(points);
+    hull = this.fillPolygon(hull);
 
     this.canvas2D.clear();
     this.canvas2D.draw(hull, 50);
   }
 
-  private fillHull(hull: Point[]) {
+  private fillPolygon(polygon: Point[]) {
     const selectElem = document.getElementById(
       'polygon-fill-select'
     ) as HTMLSelectElement;
     const fillType = selectElem.value;
 
     if (fillType === 'scan-lines-fill') {
-      return PolygonBuilder.scanLinesFill(hull);
+      return PolygonBuilder.scanLinesFill(polygon);
     } else if (fillType === 'scan-lines-active-edges-fill') {
-      return PolygonBuilder.scanLinesAndActiveEdgesFill(hull);
+      return PolygonBuilder.scanLinesWithActiveEdgesFill(polygon);
     } else if (fillType === 'flood-fill') {
-      return PolygonBuilder.floodFill(hull);
+      return PolygonBuilder.floodFill(polygon);
     } else if (fillType === 'scan-lines-flood-fill') {
-      return PolygonBuilder.scanLinesFloodFill(hull);
+      return PolygonBuilder.scanLinesFloodFill(polygon);
     }
 
-    return hull;
+    return polygon;
   }
 
   drawCube() {
@@ -279,10 +279,10 @@ export class App {
       .getElementById('dodecahedron')
       ?.addEventListener('click', () => this.drawDodecahedron());
     document
-      .getElementById('graham-hull')
-      ?.addEventListener('click', () => this.drawGrahamHull());
+      .getElementById('graham-polygon')
+      ?.addEventListener('click', () => this.drawGrahamPolygon());
     document
-      .getElementById('jarvis-hull')
-      ?.addEventListener('click', () => this.drawJarvisHull());
+      .getElementById('jarvis-polygon')
+      ?.addEventListener('click', () => this.drawJarvisPolygon());
   }
 }
