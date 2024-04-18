@@ -30,12 +30,14 @@
             <button id="bspline-curve">B-Spline</button>
           </div>
           <h3>Polygons</h3>
-          <select class="custom-select">
-            <option value="volvo">no fill</option>
-            <option value="saab">raster scanning 1</option>
-            <option value="fiat">raster scanning 2</option>
-            <option value="audi">simple seeded</option>
-            <option value="audi">line-by-line seeded</option>
+          <select class="custom-select" id="polygon-fill-select">
+            <option value="no-fill">no fill</option>
+            <option value="scan-lines-fill">scan lines fill</option>
+            <option value="scan-lines-active-edges-fill">
+              scan lines + active edges fill
+            </option>
+            <option value="flood-fill">flood fill</option>
+            <option value="scan-lines-flood-fill">scan lines flood fill</option>
           </select>
           <div class="menu__group">
             <button id="graham-hull">Graham Hull</button>

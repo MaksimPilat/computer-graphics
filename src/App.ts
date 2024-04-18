@@ -167,7 +167,8 @@ export class App {
       { x: 12, y: 10 },
     ];
 
-    const hull = Builder2D.buildGrahamHull(points);
+    let hull = Builder2D.buildGrahamHull(points);
+    hull = this.fillHull(hull);
 
     this.canvas2D.clear();
     this.canvas2D.draw(hull, 50);
@@ -186,10 +187,30 @@ export class App {
       { x: 12, y: 10 },
     ];
 
-    const hull = Builder2D.buildJarvisHull(points);
+    let hull = Builder2D.buildJarvisHull(points);
+    hull = this.fillHull(hull);
 
     this.canvas2D.clear();
     this.canvas2D.draw(hull, 50);
+  }
+
+  private fillHull(hull: Point[]) {
+    const selectElem = document.getElementById(
+      'polygon-fill-select'
+    ) as HTMLSelectElement;
+    const fillType = selectElem.value;
+
+    if (fillType === 'scan-lines-fill') {
+      return Builder2D.scanLinesFill(hull);
+    } else if (fillType === 'scan-lines-active-edges-fill') {
+      return Builder2D.scanLinesAndActiveEdgesFill(hull);
+    } else if (fillType === 'flood-fill') {
+      return Builder2D.floodFill(hull);
+    } else if (fillType === 'scan-lines-flood-fill') {
+      return Builder2D.scanLinesFloodFill(hull);
+    }
+
+    return hull;
   }
 
   drawCube() {

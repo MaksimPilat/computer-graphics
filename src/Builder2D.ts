@@ -460,4 +460,28 @@ export class Builder2D {
 
     return hull;
   }
+
+  static scanLinesFill(point: Point[]) {
+    console.log('scanLinesFill');
+
+    return point;
+  }
+
+  static scanLinesAndActiveEdgesFill(point: Point[]) {
+    console.log('scanLinesAndActiveEdgesFill');
+
+    return point;
+  }
+
+  static floodFill(point: Point[]) {
+    console.log('floodFill');
+
+    return point;
+  }
+
+  static scanLinesFloodFill(point: Point[]) {
+    console.log('scanLinesFloodFill');
+
+    return point;
+  }
 }
