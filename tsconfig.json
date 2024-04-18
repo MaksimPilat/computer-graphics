@@ -11,7 +11,7 @@
     "resolveJsonModule": true,
     "experimentalDecorators": true
   },
-  "include": ["src/**/*.ts", "index.ts"],
+  "include": ["src/**/*.ts", "src/index.ts"],
   "exclude": ["node_modules"],
   "tsc-alias": {
     "resolveFullPaths": true,
