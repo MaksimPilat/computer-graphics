@@ -1,4 +1,4 @@
-import { App } from './App';
+import { App } from './src/App';
 
 const app = new App({
   root: document.getElementById('content') as HTMLElement,
