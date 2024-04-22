@@ -1,9 +1,11 @@
 import { Orientation, Point } from '../types';
 
-export function orientation(p: Point, q: Point, r: Point) {
-  const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-  if (val === 0) return Orientation.COLLINEAR;
-  return val > 0 ? Orientation.CLOCKWISE : Orientation.COUNTER_CLOCKWISE;
+export function orientation(prev: Point, curr: Point, next: Point) {
+  const value =
+    (curr.y - prev.y) * (next.x - curr.x) -
+    (curr.x - prev.x) * (next.y - curr.y);
+  if (value === 0) return Orientation.COLLINEAR;
+  return value > 0 ? Orientation.CLOCKWISE : Orientation.COUNTER_CLOCKWISE;
 }
 
 export function findLeftmost(points: Point[]) {
