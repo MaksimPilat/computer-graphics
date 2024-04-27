@@ -1,6 +1,6 @@
-import { LineBuilder } from './LineBuilder';
-import { Orientation, Point } from '../types';
-import { findLeftmost, orientation } from './helpers';
+import { LineBuilder } from "./LineBuilder";
+import { Edge, Orientation, Point } from "../types";
+import { findLeftmost, orientation } from "./helpers";
 
 export class PolygonBuilder {
   static buildGrahamPolygon(points: Point[]) {
@@ -16,10 +16,7 @@ export class PolygonBuilder {
       let next = points[0];
 
       for (const point of points) {
-        if (
-          next === current ||
-          orientation(current, point, next) === Orientation.COUNTER_CLOCKWISE
-        ) {
+        if (next === current || orientation(current, point, next) === Orientation.COUNTER_CLOCKWISE) {
           next = point;
         }
       }
@@ -50,10 +47,7 @@ export class PolygonBuilder {
       q = (p + 1) % points.length;
 
       for (let i = 0; i < points.length; i++) {
-        if (
-          orientation(points[p], points[i], points[q]) ===
-          Orientation.COUNTER_CLOCKWISE
-        ) {
+        if (orientation(points[p], points[i], points[q]) === Orientation.COUNTER_CLOCKWISE) {
           q = i;
         }
       }
@@ -70,26 +64,80 @@ export class PolygonBuilder {
     return polygon;
   }
 
-  static scanLinesFill(polygon: Point[]) {
-    console.log('sscanLinesFill');
+  static isInsidePolygon = (x: number, y: number, polygon: Point[]) => {
+    let isInside = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      const xi = polygon[i].x,
+        yi = polygon[i].y;
+      const xj = polygon[j].x,
+        yj = polygon[j].y;
 
-    return polygon;
+      const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+      if (intersect) isInside = !isInside;
+    }
+    return isInside;
+  };
+
+  static scanLinesFill(polygon: Point[]) {
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const point of polygon) {
+      if (point.y < minY) minY = point.y;
+      if (point.y > maxY) maxY = point.y;
+    }
+
+    const edges: Edge[] = [];
+    for (let i = 0; i < polygon.length; i++) {
+      const startPoint = polygon[i];
+      const endPoint = i === polygon.length - 1 ? polygon[0] : polygon[i + 1];
+      if (startPoint.y !== endPoint.y) {
+        const edge: Edge = {
+          startY: Math.min(startPoint.y, endPoint.y),
+          endY: Math.max(startPoint.y, endPoint.y),
+          xAtMinY: startPoint.y < endPoint.y ? startPoint.x : endPoint.x,
+          slopeInverse: (startPoint.x - endPoint.x) / (startPoint.y - endPoint.y),
+        };
+        edges.push(edge);
+      }
+    }
+
+    const filledPolygon: Point[] = [];
+
+    for (let y = minY; y <= maxY; y++) {
+      const intersections: number[] = [];
+      for (const edge of edges) {
+        if (y >= edge.startY && y < edge.endY) {
+          const x = edge.xAtMinY + edge.slopeInverse * (y - edge.startY);
+          intersections.push(x);
+        }
+      }
+      intersections.sort((a, b) => a - b);
+      for (let i = 0; i < intersections.length; i += 2) {
+        const startX = Math.ceil(intersections[i]);
+        const endX = Math.floor(intersections[i + 1]);
+        for (let x = startX; x <= endX; x++) {
+          filledPolygon.push({ x, y });
+        }
+      }
+    }
+
+    return filledPolygon;
   }
 
   static scanLinesWithActiveEdgesFill(polygon: Point[]) {
-    console.log('scanLinesAndActiveEdgesFill');
+    console.log("scanLinesWithActiveEdgesFill");
 
     return polygon;
   }
 
   static floodFill(polygon: Point[]) {
-    console.log('floodFill');
+    console.log("floodFill");
 
     return polygon;
   }
 
   static scanLinesFloodFill(polygon: Point[]) {
-    console.log('scanLinesFloodFill');
+    console.log("scanLinesFloodFill");
 
     return polygon;
   }

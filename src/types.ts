@@ -5,6 +5,13 @@ export type Point = {
   intensity?: number;
 };
 
+export type Edge = {
+  startY: number;
+  endY: number;
+  xAtMinY: number;
+  slopeInverse: number;
+};
+
 export type CanvasOptions = {
   root: HTMLElement;
 };
