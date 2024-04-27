@@ -87,6 +87,7 @@ export class PolygonBuilder {
     }
 
     const edges: Edge[] = [];
+
     for (let i = 0; i < polygon.length; i++) {
       const startPoint = polygon[i];
       const endPoint = i === polygon.length - 1 ? polygon[0] : polygon[i + 1];
