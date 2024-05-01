@@ -1,5 +1,5 @@
 import { LineBuilder } from "./LineBuilder";
-import { Edge, Orientation, Point } from "../types";
+import { Edge, Orientation, Point, Triangle } from "../types";
 import { findLeftmost, orientation } from "./helpers";
 
 export class PolygonBuilder {
@@ -125,21 +125,142 @@ export class PolygonBuilder {
     return filledPolygon;
   }
 
-  static scanLinesWithActiveEdgesFill(polygon: Point[]) {
-    console.log("scanLinesWithActiveEdgesFill");
+  static scanLinesWithActiveEdgesFill(polygon: Point[]): Point[] {
+    if (!polygon || polygon.length === 0) {
+      return [];
+    }
 
-    return polygon;
+    const filledPixels: Point[] = [];
+
+    const minY = Math.min(...polygon.map((point) => point.y));
+    const maxY = Math.max(...polygon.map((point) => point.y));
+
+    const scanlineX: number[] = new Array(maxY - minY + 1).fill(Number.MAX_SAFE_INTEGER);
+    const numVertices = polygon.length;
+
+    const filledPolygon = this.scanLinesFill(polygon);
+
+    for (let y = minY; y <= maxY; y++) {
+      for (let i = 0, j = numVertices - 1; i < numVertices; j = i++) {
+        const vi = polygon[i];
+        const vj = polygon[j];
+        if (vi.y > y !== vj.y > y && (y - vi.y) * (vj.x - vi.x) > (vi.y - vj.y) * (vi.x - y)) {
+          scanlineX[y - minY] = Math.min(
+            scanlineX[y - minY],
+            Math.floor(vi.x + ((y - vi.y) / (vj.y - vi.y)) * (vj.x - vi.x))
+          );
+        }
+      }
+
+      for (let x = scanlineX[y - minY]; x < polygon.length; x++) {
+        filledPixels.push({ x, y });
+      }
+    }
+
+    return filledPolygon;
+  }
+
+  static isPointInsidePolygon(x: number, y: number, polygon: Point[]): boolean {
+    const numVertices = polygon.length;
+    let intersections = 0;
+
+    for (let i = 0; i < numVertices; i++) {
+      const { x: x1, y: y1 } = polygon[i];
+      const { x: x2, y: y2 } = polygon[(i + 1) % numVertices];
+
+      if ((y1 <= y && y < y2) || (y2 <= y && y < y1)) {
+        if (x < ((x2 - x1) * (y - y1)) / (y2 - y1) + x1) {
+          intersections++;
+        }
+      }
+    }
+
+    return intersections % 2 !== 0;
+  }
+
+  static isPointInsideAnyPolygon(x: number, y: number, polygons: Point[][]): boolean {
+    for (const polygon of polygons) {
+      if (this.isPointInsidePolygon(x, y, polygon)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   static floodFill(polygon: Point[]) {
-    console.log("floodFill");
+    const filledPolygon: Point[] = [];
+    const stack: [number, number][] = [];
 
-    return polygon;
+    polygon.forEach((point) => {
+      stack.push([point.x, point.y]);
+    });
+
+    const paintedPixels: Set<string> = new Set();
+
+    while (stack.length > 0) {
+      const [x, y] = stack.pop()!;
+      const key = `${x},${y}`;
+      if (!paintedPixels.has(key) && this.isPointInsideAnyPolygon(x, y, [polygon])) {
+        filledPolygon.push({ x, y });
+        paintedPixels.add(key);
+        stack.push([x + 1, y]);
+        stack.push([x - 1, y]);
+        stack.push([x, y + 1]);
+        stack.push([x, y - 1]);
+      }
+    }
+
+    return filledPolygon;
   }
 
   static scanLinesFloodFill(polygon: Point[]) {
-    console.log("scanLinesFloodFill");
+    const filledPixels: Point[] = [];
+    const stack: [number, number][] = [];
 
-    return polygon;
+    polygon.forEach((point) => {
+      const xCenter = Math.floor(point.x / 10) * 10 + 5;
+      const yCenter = Math.floor(point.y / 10) * 10 + 5;
+      stack.push([xCenter, yCenter]);
+    });
+
+    const paintedPixels: Set<string> = new Set();
+
+    const filledPolygon = this.scanLinesFill(polygon);
+
+    while (stack.length > 0) {
+      const [x, y] = stack.pop()!;
+      const key = `${x},${y}`;
+      if (!paintedPixels.has(key)) {
+        let left = x;
+        let right = x;
+
+        while (left > 0 && !paintedPixels.has(`${left - 10},${y}`)) {
+          left -= 10;
+        }
+
+        while (right < 790 && !paintedPixels.has(`${right + 10},${y}`)) {
+          right += 10;
+        }
+
+        let i = left;
+        while (i <= right) {
+          filledPixels.push({ x: i, y });
+          paintedPixels.add(`${i},${y}`);
+          if (y > 0 && !paintedPixels.has(`${i},${y - 10}`)) {
+            stack.push([i, y - 10]);
+          }
+          if (y < 590 && !paintedPixels.has(`${i},${y + 10}`)) {
+            stack.push([i, y + 10]);
+          }
+          i += 10;
+        }
+      }
+    }
+
+    return filledPolygon;
+  }
+
+  static buildDelaunayTriangulation(points: Point[]) {
+    return points;
   }
 }

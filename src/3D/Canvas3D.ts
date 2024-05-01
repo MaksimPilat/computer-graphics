@@ -1,16 +1,11 @@
-import * as THREE from 'three';
-import { Canvas, CanvasOptions, Point, Shape } from '../types';
+import * as THREE from "three";
+import { Canvas, CanvasOptions, Point, Shape } from "../types";
 
 export type Canvas3DOptions = CanvasOptions;
 
 export class Canvas3D implements Canvas {
   private scene = new THREE.Scene();
-  private camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
+  private camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
   private renderer = new THREE.WebGLRenderer();
   private resizeObserver: ResizeObserver;
   private animationFrameId: number | null = null;
@@ -31,22 +26,16 @@ export class Canvas3D implements Canvas {
 
     this.resizeObserver.observe(root);
 
-    this.scene.background = new THREE.Color('#ffffff');
+    this.scene.background = new THREE.Color("#ffffff");
 
     this.camera.position.z = 2;
     this.camera.userData = { theta: 0, phi: 0 };
 
     root.appendChild(this.renderer.domElement);
 
-    this.renderer.domElement.addEventListener('mousedown', (event) =>
-      this.onMouseDown(event)
-    );
-    this.renderer.domElement.addEventListener('mouseup', () =>
-      this.onMouseUp()
-    );
-    this.renderer.domElement.addEventListener('mousemove', (event) =>
-      this.onMouseMove(event)
-    );
+    this.renderer.domElement.addEventListener("mousedown", (event) => this.onMouseDown(event));
+    this.renderer.domElement.addEventListener("mouseup", () => this.onMouseUp());
+    this.renderer.domElement.addEventListener("mousemove", (event) => this.onMouseMove(event));
   }
 
   draw(geometry: THREE.BufferGeometry, shapeName: Shape) {
@@ -94,11 +83,11 @@ export class Canvas3D implements Canvas {
 
   disable() {
     this.clear();
-    this.renderer.domElement.style.display = 'none';
+    this.renderer.domElement.style.display = "none";
   }
 
   enable() {
-    this.renderer.domElement.style.display = 'block';
+    this.renderer.domElement.style.display = "block";
   }
 
   private onMouseDown(event: MouseEvent) {
@@ -132,9 +121,7 @@ export class Canvas3D implements Canvas {
   }
 
   private rotateShape(shapeName: Shape, deltaMove: Point) {
-    const object = this.scene.getObjectByName(
-      shapeName.toString()
-    ) as THREE.Object3D<THREE.Object3DEventMap>;
+    const object = this.scene.getObjectByName(shapeName.toString()) as THREE.Object3D<THREE.Object3DEventMap>;
 
     const axis = new THREE.Vector3(deltaMove.y, deltaMove.x);
     const angle = axis.length() * 0.01;
@@ -155,10 +142,7 @@ export class Canvas3D implements Canvas {
     this.camera.userData.phi += phi;
 
     const x = radius * Math.sin(this.camera.userData.theta);
-    const y =
-      radius *
-      Math.sin(this.camera.userData.phi) *
-      Math.cos(frequency * this.camera.userData.theta);
+    const y = radius * Math.sin(this.camera.userData.phi) * Math.cos(frequency * this.camera.userData.theta);
     const z = radius * Math.cos(this.camera.userData.phi);
     const newPosition = new THREE.Vector3(x, y, z);
 
@@ -167,9 +151,7 @@ export class Canvas3D implements Canvas {
   }
 
   private animateCamera() {
-    this.animationFrameId = requestAnimationFrame(
-      this.animateCamera.bind(this)
-    );
+    this.animationFrameId = requestAnimationFrame(this.animateCamera.bind(this));
 
     if (!this.isDragging) {
       this.rotateCamera({ x: 0.5, y: 0.3, z: 0 });
