@@ -204,24 +204,6 @@ export class App {
     return polygon;
   }
 
-  drawDelaunayTriangulation() {
-    this.switchTo2D();
-
-    const points: Point[] = [
-      { x: 10, y: 10 },
-      { x: 10, y: 15 },
-      { x: 30, y: 20 },
-      { x: 20, y: 10 },
-    ];
-
-    let triangulation = PolygonBuilder.buildDelaunayTriangulation(points);
-
-    console.log(triangulation);
-
-    this.canvas2D.clear();
-    this.canvas2D.draw(triangulation, 50);
-  }
-
   drawCube() {
     this.switchTo3D();
     this.canvas3D.drawCube();
@@ -235,6 +217,11 @@ export class App {
   drawDodecahedron() {
     this.switchTo3D();
     this.canvas3D.drawDodecahedron();
+  }
+
+  drawDelaunayTriangulation() {
+    this.switchTo3D();
+    this.canvas3D.drawDelaunayTriangulation();
   }
 
   clearCanvas() {

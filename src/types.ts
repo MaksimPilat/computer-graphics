@@ -12,12 +12,6 @@ export type Edge = {
   slopeInverse: number;
 };
 
-export type Triangle = {
-  p1: Point;
-  p2: Point;
-  p3: Point;
-};
-
 export type CanvasOptions = {
   root: HTMLElement;
 };
@@ -33,6 +27,7 @@ export enum Shape {
   CUBE,
   PYRAMID,
   DODECAHEDRON,
+  TRIANGULATION,
 }
 
 export enum Orientation {

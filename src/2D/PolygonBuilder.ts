@@ -1,5 +1,5 @@
 import { LineBuilder } from "./LineBuilder";
-import { Edge, Orientation, Point, Triangle } from "../types";
+import { Edge, Orientation, Point } from "../types";
 import { findLeftmost, orientation } from "./helpers";
 
 export class PolygonBuilder {
@@ -258,9 +258,5 @@ export class PolygonBuilder {
     }
 
     return filledPolygon;
-  }
-
-  static buildDelaunayTriangulation(points: Point[]) {
-    return points;
   }
 }

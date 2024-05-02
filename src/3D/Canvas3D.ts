@@ -1,11 +1,12 @@
 import * as THREE from "three";
+import Delaunator from "delaunator";
 import { Canvas, CanvasOptions, Point, Shape } from "../types";
 
 export type Canvas3DOptions = CanvasOptions;
 
 export class Canvas3D implements Canvas {
   private scene = new THREE.Scene();
-  private camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  private camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
   private renderer = new THREE.WebGLRenderer();
   private resizeObserver: ResizeObserver;
   private animationFrameId: number | null = null;
@@ -26,7 +27,7 @@ export class Canvas3D implements Canvas {
 
     this.resizeObserver.observe(root);
 
-    this.scene.background = new THREE.Color("#ffffff");
+    this.scene.background = new THREE.Color(THREE.Color.NAMES.white);
 
     this.camera.position.z = 2;
     this.camera.userData = { theta: 0, phi: 0 };
@@ -36,9 +37,10 @@ export class Canvas3D implements Canvas {
     this.renderer.domElement.addEventListener("mousedown", (event) => this.onMouseDown(event));
     this.renderer.domElement.addEventListener("mouseup", () => this.onMouseUp());
     this.renderer.domElement.addEventListener("mousemove", (event) => this.onMouseMove(event));
+    this.renderer.domElement.addEventListener("wheel", (event) => this.onMouseWheel(event));
   }
 
-  draw(geometry: THREE.BufferGeometry, shapeName: Shape) {
+  draw(geometry: THREE.BufferGeometry, shapeName: Shape, isAnimated = true) {
     this.clear();
 
     this.currentShape = shapeName;
@@ -50,7 +52,9 @@ export class Canvas3D implements Canvas {
 
     this.scene.add(line);
 
-    this.animateCamera();
+    this.renderer.render(this.scene, this.camera);
+
+    isAnimated && this.animateCamera();
   }
 
   drawCube() {
@@ -68,6 +72,54 @@ export class Canvas3D implements Canvas {
     this.draw(geometry, Shape.DODECAHEDRON);
   }
 
+  drawDelaunayTriangulation() {
+    const size = { x: 200, z: 200 };
+    const pointsCount = 1000;
+    const points3d = [];
+    let sumX = 0,
+      sumZ = 0;
+
+    for (let i = 0; i < pointsCount; i++) {
+      const x = THREE.MathUtils.randFloatSpread(size.x);
+      const z = THREE.MathUtils.randFloatSpread(size.z);
+      const y = (Math.sin((x / size.x) * 5) + Math.cos((z / size.z) * 5)) * 25;
+
+      points3d.push(new THREE.Vector3(x, y, z));
+      sumX += x;
+      sumZ += z;
+    }
+
+    const centerX = sumX / pointsCount;
+    const centerZ = sumZ / pointsCount;
+
+    points3d.forEach((point) => {
+      point.x -= centerX;
+      point.z -= centerZ;
+    });
+
+    const points2D = points3d.map((point) => [point.x, point.z]);
+    const indexDelaunay = Delaunator.from(points2D);
+    const triangles = indexDelaunay.triangles;
+    const verticesArray = new Float32Array(points3d.length * 3);
+    const indicesArray = new Uint32Array(triangles.length);
+
+    points3d.forEach((point, i) => {
+      verticesArray[i * 3] = point.x;
+      verticesArray[i * 3 + 1] = point.y;
+      verticesArray[i * 3 + 2] = point.z;
+    });
+
+    triangles.forEach((index, i) => {
+      indicesArray[i] = index;
+    });
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(verticesArray, 3));
+    geometry.setIndex(new THREE.BufferAttribute(indicesArray, 1));
+
+    this.draw(geometry, Shape.TRIANGULATION);
+  }
+
   clear() {
     this.currentShape = null;
 
@@ -79,6 +131,7 @@ export class Canvas3D implements Canvas {
     this.scene.clear();
     this.renderer.clear();
     this.camera.clear();
+    this.camera.position.z = 2;
   }
 
   disable() {
@@ -120,6 +173,15 @@ export class Canvas3D implements Canvas {
     }
   }
 
+  private onMouseWheel(event: WheelEvent) {
+    const delta = event.deltaY;
+    const step = (delta > 0 ? -1 : 1) * 10;
+
+    this.camera.position.z += step;
+
+    this.renderer.render(this.scene, this.camera);
+  }
+
   private rotateShape(shapeName: Shape, deltaMove: Point) {
     const object = this.scene.getObjectByName(shapeName.toString()) as THREE.Object3D<THREE.Object3DEventMap>;
 
@@ -133,7 +195,8 @@ export class Canvas3D implements Canvas {
   private rotateCamera(deltaMove: Point) {
     const center = new THREE.Vector3(0, 0, 0);
 
-    const radius = 2;
+    const radius = this.camera.position.z;
+
     const frequency = 0.5;
     const theta = -deltaMove.x * 0.01;
     const phi = -deltaMove.y * 0.01;
@@ -143,8 +206,7 @@ export class Canvas3D implements Canvas {
 
     const x = radius * Math.sin(this.camera.userData.theta);
     const y = radius * Math.sin(this.camera.userData.phi) * Math.cos(frequency * this.camera.userData.theta);
-    const z = radius * Math.cos(this.camera.userData.phi);
-    const newPosition = new THREE.Vector3(x, y, z);
+    const newPosition = new THREE.Vector3(x, y, radius);
 
     this.camera.position.copy(newPosition);
     this.camera.lookAt(center);
