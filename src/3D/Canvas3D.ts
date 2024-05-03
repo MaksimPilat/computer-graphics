@@ -1,6 +1,4 @@
 import * as THREE from 'three';
-import * as d3 from 'd3';
-import Delaunator from 'delaunator';
 import { Canvas, CanvasOptions, Point, Shape } from '../types';
 
 export type Canvas3DOptions = CanvasOptions;
