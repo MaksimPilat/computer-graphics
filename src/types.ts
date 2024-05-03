@@ -27,7 +27,8 @@ export enum Shape {
   CUBE,
   PYRAMID,
   DODECAHEDRON,
-  TRIANGULATION,
+  DELAUNAY_TRIANGULATION,
+  VORONOI_DIAGRAM,
 }
 
 export enum Orientation {

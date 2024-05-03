@@ -1,9 +1,9 @@
-import { Point } from "./types";
-import { CurveBuilder } from "./2D/CurveBuilder";
-import { LineBuilder } from "./2D/LineBuilder";
-import { PolygonBuilder } from "./2D/PolygonBuilder";
-import { Canvas2D, Canvas2DOptions } from "./2D/Canvas2D";
-import { Canvas3D, Canvas3DOptions } from "./3D/Canvas3D";
+import { Point } from './types';
+import { CurveBuilder } from './2D/CurveBuilder';
+import { LineBuilder } from './2D/LineBuilder';
+import { PolygonBuilder } from './2D/PolygonBuilder';
+import { Canvas2D, Canvas2DOptions } from './2D/Canvas2D';
+import { Canvas3D, Canvas3DOptions } from './3D/Canvas3D';
 
 type AppOptions = Canvas2DOptions & Canvas3DOptions;
 
@@ -49,7 +49,10 @@ export class App {
   drawBresenhamLine() {
     this.switchTo2D();
 
-    const bresenhamLine = LineBuilder.buildBresenhamLine({ x: 2, y: 2 }, { x: 12, y: 6 });
+    const bresenhamLine = LineBuilder.buildBresenhamLine(
+      { x: 2, y: 2 },
+      { x: 12, y: 6 }
+    );
 
     this.canvas2D.clear();
     this.canvas2D.draw(bresenhamLine, 100);
@@ -95,7 +98,13 @@ export class App {
     this.switchTo2D();
 
     const { width, height } = this.canvas2D.getCanvasSize();
-    const hyperbola = CurveBuilder.buildHyperbola({ x: 40, y: 40 }, 5, 5, width, height);
+    const hyperbola = CurveBuilder.buildHyperbola(
+      { x: 40, y: 40 },
+      5,
+      5,
+      width,
+      height
+    );
 
     this.canvas2D.clear();
     this.canvas2D.draw(hyperbola, 10);
@@ -188,16 +197,18 @@ export class App {
   }
 
   private fillPolygon(polygon: Point[]) {
-    const selectElem = document.getElementById("polygon-fill-select") as HTMLSelectElement;
+    const selectElem = document.getElementById(
+      'polygon-fill-select'
+    ) as HTMLSelectElement;
     const fillType = selectElem.value;
 
-    if (fillType === "scan-lines-fill") {
+    if (fillType === 'scan-lines-fill') {
       return PolygonBuilder.scanLinesFill(polygon);
-    } else if (fillType === "scan-lines-active-edges-fill") {
+    } else if (fillType === 'scan-lines-active-edges-fill') {
       return PolygonBuilder.scanLinesWithActiveEdgesFill(polygon);
-    } else if (fillType === "flood-fill") {
+    } else if (fillType === 'flood-fill') {
       return PolygonBuilder.floodFill(polygon);
-    } else if (fillType === "scan-lines-flood-fill") {
+    } else if (fillType === 'scan-lines-flood-fill') {
       return PolygonBuilder.scanLinesFloodFill(polygon);
     }
 
@@ -219,35 +230,59 @@ export class App {
     this.canvas3D.drawDodecahedron();
   }
 
-  drawDelaunayTriangulation() {
-    this.switchTo3D();
-    this.canvas3D.drawDelaunayTriangulation();
-  }
-
   clearCanvas() {
     this.canvas2D.clear();
     this.canvas3D.clear();
   }
 
   setupEventListeners() {
-    document.getElementById("dda-line")?.addEventListener("click", () => this.drawDDALine());
-    document.getElementById("bresenham-line")?.addEventListener("click", () => this.drawBresenhamLine());
-    document.getElementById("wu-line")?.addEventListener("click", () => this.drawWuLine());
-    document.getElementById("circle")?.addEventListener("click", () => this.drawCircle());
-    document.getElementById("ellipse")?.addEventListener("click", () => this.drawEllipse());
-    document.getElementById("clear-canvas")?.addEventListener("click", () => this.clearCanvas());
-    document.getElementById("parabola")?.addEventListener("click", () => this.drawParabola());
-    document.getElementById("hyperbola")?.addEventListener("click", () => this.drawHyperbola());
-    document.getElementById("hermite-curve")?.addEventListener("click", () => this.drawHermiteCurve());
-    document.getElementById("bezier-curve")?.addEventListener("click", () => this.drawBezierCurve());
-    document.getElementById("bspline-curve")?.addEventListener("click", () => this.drawBSplineCurve());
-    document.getElementById("cube")?.addEventListener("click", () => this.drawCube());
-    document.getElementById("pyramid")?.addEventListener("click", () => this.drawPyramid());
-    document.getElementById("dodecahedron")?.addEventListener("click", () => this.drawDodecahedron());
-    document.getElementById("graham-polygon")?.addEventListener("click", () => this.drawGrahamPolygon());
-    document.getElementById("jarvis-polygon")?.addEventListener("click", () => this.drawJarvisPolygon());
     document
-      .getElementById("delaunay-triangulation")
-      ?.addEventListener("click", () => this.drawDelaunayTriangulation());
+      .getElementById('dda-line')
+      ?.addEventListener('click', () => this.drawDDALine());
+    document
+      .getElementById('bresenham-line')
+      ?.addEventListener('click', () => this.drawBresenhamLine());
+    document
+      .getElementById('wu-line')
+      ?.addEventListener('click', () => this.drawWuLine());
+    document
+      .getElementById('circle')
+      ?.addEventListener('click', () => this.drawCircle());
+    document
+      .getElementById('ellipse')
+      ?.addEventListener('click', () => this.drawEllipse());
+    document
+      .getElementById('clear-canvas')
+      ?.addEventListener('click', () => this.clearCanvas());
+    document
+      .getElementById('parabola')
+      ?.addEventListener('click', () => this.drawParabola());
+    document
+      .getElementById('hyperbola')
+      ?.addEventListener('click', () => this.drawHyperbola());
+    document
+      .getElementById('hermite-curve')
+      ?.addEventListener('click', () => this.drawHermiteCurve());
+    document
+      .getElementById('bezier-curve')
+      ?.addEventListener('click', () => this.drawBezierCurve());
+    document
+      .getElementById('bspline-curve')
+      ?.addEventListener('click', () => this.drawBSplineCurve());
+    document
+      .getElementById('cube')
+      ?.addEventListener('click', () => this.drawCube());
+    document
+      .getElementById('pyramid')
+      ?.addEventListener('click', () => this.drawPyramid());
+    document
+      .getElementById('dodecahedron')
+      ?.addEventListener('click', () => this.drawDodecahedron());
+    document
+      .getElementById('graham-polygon')
+      ?.addEventListener('click', () => this.drawGrahamPolygon());
+    document
+      .getElementById('jarvis-polygon')
+      ?.addEventListener('click', () => this.drawJarvisPolygon());
   }
 }
