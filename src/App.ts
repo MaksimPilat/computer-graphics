@@ -197,19 +197,12 @@ export class App {
   }
 
   private fillPolygon(polygon: Point[]) {
-    const selectElem = document.getElementById(
-      'polygon-fill-select'
-    ) as HTMLSelectElement;
-    const fillType = selectElem.value;
+    const isFill = (
+      document.getElementById('polygon-filling-flag') as HTMLInputElement
+    ).checked;
 
-    if (fillType === 'scan-lines-fill') {
-      return PolygonBuilder.scanLinesFill(polygon);
-    } else if (fillType === 'scan-lines-active-edges-fill') {
-      return PolygonBuilder.scanLinesWithActiveEdgesFill(polygon);
-    } else if (fillType === 'flood-fill') {
-      return PolygonBuilder.floodFill(polygon);
-    } else if (fillType === 'scan-lines-flood-fill') {
-      return PolygonBuilder.scanLinesFloodFill(polygon);
+    if (isFill) {
+      return PolygonBuilder.fillPolygon(polygon);
     }
 
     return polygon;
